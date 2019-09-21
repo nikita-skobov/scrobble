@@ -151,6 +151,24 @@ const action_tile_taken = (color, tile, pos) => {
     }
 }
 
+const action_next_turn = (color) => {
+    return {
+        type: 'NEXT_TURN',
+        payload: {
+            color,
+        }
+    }
+}
+
+const action_game_has_tiles_left = (tiles) => {
+    return {
+        type: 'TILES_LEFT',
+        payload: {
+            tiles_left: tiles,
+        }
+    }
+}
+
 const action_connect_to_game = (url, port, cb) => {
     return (dispatch) => {
         const socket = sio(`${url}:${port}`)
@@ -158,11 +176,17 @@ const action_connect_to_game = (url, port, cb) => {
             console.log('woohoo connected!!')
             socket.emit('whoami')
             socket.emit('whois')
-            socket.once('game_started', (order) => {
+            socket.once('game_started', (order, tiles_left) => {
                 console.log('order is: ')
                 console.log(order)
+                dispatch(action_game_has_tiles_left(tiles_left))
                 dispatch(action_game_has_order(order))
                 socket.emit('get_tiles')
+            })
+
+            socket.on('next_turn', (color, tiles_left) => {
+                dispatch(action_game_has_tiles_left(tiles_left))
+                dispatch(action_next_turn(color))
             })
 
             socket.on('tile_placed', (color, tile, pos) => {

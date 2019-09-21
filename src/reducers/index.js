@@ -10,6 +10,7 @@ const connection_initial_state = {
 const board_initial_state = {
     placing_tile: '',
     placed_tiles: {},
+    tiles_left: 100,
 }
 
 const turn_initial_state = {
@@ -187,6 +188,15 @@ export function board_reducer(state = board_initial_state, action) {
             console.log(ret_obj)
             return ret_obj
         }
+        case 'TILES_LEFT': {
+            const {
+                tiles_left,
+            } = action.payload
+
+            const ret_obj = { ...state }
+            ret_obj.tiles_left = tiles_left
+            return ret_obj
+        }
         default:
             return state
     }
@@ -202,7 +212,12 @@ export function turn_reducer(state = turn_initial_state, action) {
             return ret_obj
         }
         case 'NEXT_TURN': {
-
+            const {
+                color
+            } = action.payload
+            const ret_obj = { ...state }
+            ret_obj.turn = color
+            return ret_obj
         }
         default:
             return state

@@ -29,6 +29,7 @@ function shuffle(array) {
 let has_host = false
 let game_running = false
 let current_turn = undefined
+let turn_order = []
 const positions = [
     'red',
     'green',
@@ -137,7 +138,7 @@ io.on('connection', (socket) => {
     socket.on('place_tile', (tile, pos) => {
         if (socket.color) {
             for (let i = 0; i < players.length; i += 1) {
-                if (players[i].color === socket.color) {
+                if (players[i].color === socket.color && current_turn === socket.color) {
                     console.log(`player: ${socket.color} is placing a '${tile}' on ${pos}`)
                     const index_of_tile = players[i].tiles.indexOf(tile)
                     if (index_of_tile !== -1) {
@@ -156,11 +157,43 @@ io.on('connection', (socket) => {
         }
     })
 
+    socket.on('end_turn', () => {
+        if (socket.color) {
+            for (let i = 0; i < players.length; i += 1) {
+                if (players[i].color === socket.color && current_turn === socket.color) {
+                    let turn_index = turn_order.indexOf(socket.color)
+                    turn_index += 1
+                    if (turn_index >= players.length) {
+                        turn_index = 0
+                    }
+
+                    let diff = 7 - players[i].tiles.length
+                    let add_tiles = draw_n_tiles(diff)
+                    add_tiles.forEach((tile) => {
+                        players[i].tiles.push(tile)
+                    })
+
+                    socket.emit('got_tiles', socket.color, players[i].tiles)
+                    let dummy_tiles = []
+                    players[i].tiles.forEach((tile) => {
+                        dummy_tiles.push(' ')
+                    })
+                    socket.broadcast.emit('got_tiles', socket.color, dummy_tiles)
+
+                    current_turn = turn_order[turn_index]
+                    socket.emit('next_turn', current_turn, tiles_remaining.length)
+                    socket.broadcast.emit('next_turn', current_turn, tiles_remaining.length)
+                    break
+                }
+            }
+        }
+    })
+
     socket.on('take_tile', (pos) => {
         if (socket.color) {
             for (let i = 0; i < players.length; i += 1) {
                 if (players[i].color === socket.color) {
-                    if (board[pos]) {
+                    if (current_turn === socket.color && board[pos]) {
                         const placed_by = player_placed[pos]
                         if (placed_by === socket.color) {
                             const tile = board[pos]
@@ -189,9 +222,13 @@ io.on('connection', (socket) => {
                 players[i].tiles = draw_n_tiles(7)
             }
 
+            temp.forEach((col) => {
+                turn_order.push(col)
+            })
+
             current_turn = temp[0]
-            socket.emit('game_started', temp)
-            socket.broadcast.emit('game_started', temp)
+            socket.emit('game_started', temp, tiles_remaining.length)
+            socket.broadcast.emit('game_started', temp, tiles_remaining.length)
             console.log('STARTING GAME WOOHOOO!')
         }
     })
