@@ -7,27 +7,42 @@ import {
 } from 'reactstrap'
 
 export const action_enter_tile_place_mode = (tile) => {
-    
+    console.log(tile)
+    console.log(tile.target)
+    return {
+        type: 'TILE_SELECTED',
+        payload: {
+            tile: tile.target.innerHTML,
+        }
+    }
 }
 
 function fillVertical(tile, color) {
     return (
-        <div onClick={} class="tile-container">
+        <div class="tile-container">
             <div style={{ backgroundColor: color }} class="tile">{tile}</div>
         </div>
     )
 }
 
-function fillHorizontal(tile, color) {
+function fillHorizontal(tile, color, is_turn, enter_tile_place_mode) {
+    let click_func = () => {}
+    let turn_class = ""
+    if (is_turn) {
+        click_func = enter_tile_place_mode
+        turn_class = "tile_turn_clickable"
+    }
     return (
-        <Col onClick={} style={{ backgroundColor: color, margin: '5px', color: 'white' }}>{tile}</Col>
+        <Col className={turn_class} onClick={click_func} style={{ backgroundColor: color, margin: '5px', color: 'white' }}>{tile}</Col>
     )
 }
 
 export function PlayerSpot(props) {
     const {
         tiles,
-        player_obj
+        player_obj,
+        is_turn,
+        enter_tile_place_mode,
     } = props
 
     console.log('rendering player spot: ')
@@ -44,7 +59,7 @@ export function PlayerSpot(props) {
         return (
             <Row style={{ marginLeft: '10%', marginRight: '10%', width: '100%' }}>
                 <Row noGutters style={{ marginLeft: 'auto', marginRight: 'auto', width: '80%' }}>
-                    {tiles.map((tile) => fillHorizontal(tile, player_obj.color))}
+                    {tiles.map((tile) => fillHorizontal(tile, player_obj.color, is_turn, enter_tile_place_mode))}
                 </Row>
             </Row>
         )
@@ -77,6 +92,7 @@ const map_state_to_props = (state, own_props) => {
     // }
 
     return {
+        num_tiles: player_obj.tiles ? player_obj.tiles.length : 0,
         tiles: player_obj.tiles,
         player_obj,
         is_turn: turn === state.players.me.color,
@@ -84,4 +100,8 @@ const map_state_to_props = (state, own_props) => {
     }
 }
 
-export default connect(map_state_to_props)(PlayerSpot)
+const map_actions_to_props = {
+    enter_tile_place_mode: action_enter_tile_place_mode,
+}
+
+export default connect(map_state_to_props, map_actions_to_props)(PlayerSpot)

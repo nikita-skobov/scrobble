@@ -50,6 +50,8 @@ let tiles_remaining = [
 'T','T','T','T','T','T','U','U','U','U',
 'V','V','W','W','X','Y','Y','Z','?','?',
 ]
+const board = {}
+const player_placed = {}
 
 tiles_remaining = shuffle(tiles_remaining)
 
@@ -130,6 +132,49 @@ io.on('connection', (socket) => {
             dummy_tiles.push(' ')
         })
         socket.broadcast.emit('got_tiles', color, dummy_tiles)
+    })
+
+    socket.on('place_tile', (tile, pos) => {
+        if (socket.color) {
+            for (let i = 0; i < players.length; i += 1) {
+                if (players[i].color === socket.color) {
+                    console.log(`player: ${socket.color} is placing a '${tile}' on ${pos}`)
+                    const index_of_tile = players[i].tiles.indexOf(tile)
+                    if (index_of_tile !== -1) {
+                        if (!board[pos]) {
+                            // dont allow placing tiles on an existing tile
+                            players[i].tiles.splice(index_of_tile, 1)
+                            board[pos] = tile
+                            player_placed[pos] = socket.color
+                            socket.emit('tile_placed', socket.color, tile, pos)
+                            socket.broadcast.emit('tile_placed', socket.color, tile, pos)
+                        }
+                    }
+                    break
+                }
+            }
+        }
+    })
+
+    socket.on('take_tile', (pos) => {
+        if (socket.color) {
+            for (let i = 0; i < players.length; i += 1) {
+                if (players[i].color === socket.color) {
+                    if (board[pos]) {
+                        const placed_by = player_placed[pos]
+                        if (placed_by === socket.color) {
+                            const tile = board[pos]
+                            delete board[pos]
+                            delete placed_by[pos]
+                            players[i].tiles.push(tile)
+                            socket.emit('tile_taken', socket.color, tile, pos)
+                            socket.broadcast.emit('tile_taken', socket.color, ' ', pos)
+                        }
+                    }
+                    break
+                }
+            }
+        }
     })
 
     socket.on('start_game', () => {

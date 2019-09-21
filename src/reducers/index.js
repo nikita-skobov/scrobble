@@ -8,7 +8,8 @@ const connection_initial_state = {
 }
 
 const board_initial_state = {
-
+    placing_tile: '',
+    placed_tiles: {},
 }
 
 const turn_initial_state = {
@@ -79,6 +80,54 @@ export function players_reducer(state = players_initial_state, action) {
 
             return ret_obj
         }
+        case 'TILE_PLACED': {
+            console.log('TILE PLACED REDUCER')
+            const {
+                color,
+                tile,
+            } = action.payload
+            const ret_obj = { ...state }
+            if (color === ret_obj.me.color) {
+                console.log('ITS MY COLOR!')
+                const tile_index = ret_obj.me.tiles.indexOf(tile)
+                if (tile_index !== -1) {
+                    console.log('FOUND TILE INDEX: ')
+                    console.log('my tiles before:')
+                    console.log(ret_obj.me.tiles)
+                    ret_obj.me.tiles.splice(tile_index, 1)
+                    console.log('my tiles after:')
+                    console.log(ret_obj.me.tiles)
+                }
+            } else if (color === ret_obj.left.color) {
+                ret_obj.left.tiles.shift()
+            } else if (color === ret_obj.top.color) {
+                ret_obj.top.tiles.shift()
+            } else if (color === ret_obj.right.color) {
+                ret_obj.right.tiles.shift()
+            }
+
+            return ret_obj
+        }
+        case 'TILE_TAKEN': {
+            console.log('TILE TAKEN REDUCER')
+            const {
+                color,
+                tile,
+            } = action.payload
+            const ret_obj = { ...state }
+            if (color === ret_obj.me.color) {
+                console.log('ITS MY COLOR!')
+                ret_obj.me.tiles.push(tile)
+            } else if (color === ret_obj.left.color) {
+                ret_obj.left.tiles.push(tile)
+            } else if (color === ret_obj.top.color) {
+                ret_obj.top.tiles.push(tile)
+            } else if (color === ret_obj.right.color) {
+                ret_obj.right.tiles.push(tile)
+            }
+
+            return ret_obj
+        }
         case 'GOT_TILES': {
             const {
                 color,
@@ -107,10 +156,42 @@ export function players_reducer(state = players_initial_state, action) {
 
 export function board_reducer(state = board_initial_state, action) {
     switch (action.type) {
+        case 'TILE_SELECTED': {
+            console.log('tile selected')
+            console.log('now state is:')
+            const ret_obj = { ...state }
+            ret_obj.placing_tile = action.payload.tile
+            console.log(ret_obj)
+            return ret_obj
+        }
+        case 'TILE_TAKEN': {
+            console.log('BOARD > TILE TAKEN!')
+            const {
+                pos,
+            } = action.payload
+            const ret_obj = { ...state }
+            delete ret_obj.placed_tiles[pos]
+            console.log(ret_obj)
+            return ret_obj
+        }
+        case 'TILE_PLACED': {
+            console.log('tile placed')
+            const ret_obj = { ...state }
+            ret_obj.placing_tile = ''
+            const {
+                color,
+                tile,
+                pos
+            } = action.payload
+            ret_obj.placed_tiles[pos] = { color, tile }
+            console.log(ret_obj)
+            return ret_obj
+        }
         default:
             return state
     }
 }
+
 
 export function turn_reducer(state = turn_initial_state, action) {
     switch (action.type) {
@@ -131,5 +212,6 @@ export function turn_reducer(state = turn_initial_state, action) {
 export default combineReducers({
     connection: connection_reducer,
     players: players_reducer,
+    board: board_reducer,
     turn: turn_reducer,
 })

@@ -6,13 +6,85 @@ import {
     Col,
     Table,
 } from 'reactstrap'
+import { connection_reducer } from '../reducers';
 
-const Empty = () => <th style={{ backgroundColor: '#54664f' }} />
-const TripleWord = () => <th style={{ color: 'white', backgroundColor: '#590800' }}>3W</th>
-const TripleLetter = () => <th style={{ color: 'white', backgroundColor: '#96e2e8'}}>3L</th>
-const DoubleWord = () => <th style={{ color: 'white', backgroundColor: '#a768c1' }}>2W</th>
-const DoubleLetter = () => <th style={{ color: 'white', backgroundColor: '#424242'}}>2L</th>
-const Center = () => <th style={{ color: 'white', backgroundColor: '#d3a304'}}>*</th>
+export const action_tell_server_board_click = (socket, letter, pos) => {
+    return (dispatch) => {
+        socket.emit('tile_place', { letter, pos })
+        
+    }
+}
+
+const PlacedTile = (props) => (
+    <div style={{ width: '80%', color: 'black', margin: 'auto', textAlign: 'center', backgroundColor: 'rgb(255, 210, 119)'}}>{props.children}</div>
+)
+
+
+const style_obj = {
+    empty: { textAlign: 'center', backgroundColor: '#54664f' },
+    triple_word: { textAlign: 'center', color: 'white', backgroundColor: '#590800' },
+    triple_letter: { textAlign: 'center', color: 'white', backgroundColor: '#96e2e8'},
+    double_word: { textAlign: 'center', color: 'white', backgroundColor: '#a768c1' },
+    double_letter: { textAlign: 'center', color: 'white', backgroundColor: '#424242'},
+    center: { textAlign: 'center', color: 'white', backgroundColor: '#d3a304'},
+}
+const text_obj = {
+    empty: '',
+    triple_word: '3W',
+    triple_letter: '3L',
+    double_word: '2W',
+    double_letter: '2L',
+    center: '*',
+}
+
+const Tile = (props) => {
+    const {
+        placing_tile,
+        placed_tiles,
+        NL,
+        socket,
+        type,
+        is_turn,
+    } = props
+
+
+    let style = style_obj[type]
+    let inner_text = text_obj[type]
+
+    if (placed_tiles && placed_tiles[NL]) {
+        inner_text = <PlacedTile>{placed_tiles[NL].tile}</PlacedTile>
+    }
+
+
+    let click = () => {}
+    let click_class = ''
+    if (is_turn && !placing_tile && placed_tiles && placed_tiles[NL]) {
+        click_class = 'tile_turn_clickable'
+        click = () => {
+            socket.emit('take_tile', NL)
+        }
+    }
+    if (placing_tile) {
+        click_class = 'tile_turn_clickable'
+        click = () => {
+            console.log('clicked!')
+            console.log(props)
+            console.log(NL)
+            console.log(socket)
+            socket.emit('place_tile', placing_tile, NL)
+        }
+    }
+
+    return (
+        <th className={click_class} onClick={click} style={style}>{inner_text}</th>
+    )
+}
+
+// const TripleWord = () => <th style={{ color: 'white', backgroundColor: '#590800' }}>3W</th>
+// const TripleLetter = () => <th style={{ color: 'white', backgroundColor: '#96e2e8'}}>3L</th>
+// const DoubleWord = () => <th style={{ color: 'white', backgroundColor: '#a768c1' }}>2W</th>
+// const DoubleLetter = () => <th style={{ color: 'white', backgroundColor: '#424242'}}>2L</th>
+// const Center = () => <th style={{ color: 'white', backgroundColor: '#d3a304'}}>*</th>
 
 function fillTile(num, letter, obj) {
     const NL = `${letter}${num}`
@@ -26,7 +98,7 @@ function fillTile(num, letter, obj) {
         case 'H15':
         case 'O15':
         case 'O1': {
-            return <TripleWord />
+            return <Tile {...obj} type="triple_letter" NL={NL} />
         }
 
         case 'C3':
@@ -45,7 +117,7 @@ function fillTile(num, letter, obj) {
         case 'C13':
         case 'K11':
         case 'M13': {
-            return <DoubleWord />
+            return <Tile {...obj} type="double_word" NL={NL} />
         }
 
         
@@ -69,7 +141,7 @@ function fillTile(num, letter, obj) {
         case 'H12':
         case 'G13':
         case 'I13': {
-            return <DoubleLetter />
+            return <Tile {...obj} type="double_letter" NL={NL} />
         }
 
         case 'F2':
@@ -84,17 +156,17 @@ function fillTile(num, letter, obj) {
         case 'N10':
         case 'F14':
         case 'J14': {
-            return <TripleLetter />
+            return <Tile {...obj} type="triple_letter" NL={NL} />
         }
 
         case 'H8': {
-            return <Center />
+            return <Tile {...obj} type="center" NL={NL} />
         }
 
 
 
         default:
-            return <Empty />
+            return <Tile {...obj} type="empty" NL={NL} />
     }
 }
 
@@ -104,10 +176,6 @@ const numbers = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
 const letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O']
 
 export function Board(props) {
-    const {
-        player_obj
-    } = props
-
     return (
         <Table style={{ height: '100%', tableLayout: 'fixed' }} bordered>
             {numbers.map((num) => {
@@ -121,5 +189,30 @@ export function Board(props) {
     )
 }
 
+const map_state_to_props = (state, own_props) => {
+    const {
+        placing_tile,
+        placed_tiles
+    } = state.board
+    const {
+        turn,
+    } = state.turn
+    const {
+        color,
+    } = state.players.me
+    const { socket } = state.connection
+    return {
+        is_turn: color === turn,
+        placing_tile,
+        number_of_placed_tiles: Object.keys(placed_tiles).length,
+        placed_tiles,
+        socket,
+        ...own_props
+    }
+}
 
-export default connect()(Board)
+const map_actions_to_props = {
+    tell_server_board_click: action_tell_server_board_click
+}
+
+export default connect(map_state_to_props, map_actions_to_props)(Board)

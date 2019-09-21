@@ -129,6 +129,28 @@ const action_player_joined = (is_me, player_obj) => {
     }
 }
 
+const action_tile_placed = (color, tile, pos) => {
+    return {
+        type: 'TILE_PLACED',
+        payload: {
+            color,
+            tile,
+            pos,
+        }
+    }
+}
+
+const action_tile_taken = (color, tile, pos) => {
+    return {
+        type: 'TILE_TAKEN',
+        payload: {
+            color,
+            tile,
+            pos,
+        }
+    }
+}
+
 const action_connect_to_game = (url, port, cb) => {
     return (dispatch) => {
         const socket = sio(`${url}:${port}`)
@@ -141,6 +163,14 @@ const action_connect_to_game = (url, port, cb) => {
                 console.log(order)
                 dispatch(action_game_has_order(order))
                 socket.emit('get_tiles')
+            })
+
+            socket.on('tile_placed', (color, tile, pos) => {
+                dispatch(action_tile_placed(color,tile,pos))
+            })
+
+            socket.on('tile_taken', (color, tile, pos) => {
+                dispatch(action_tile_taken(color, tile, pos))
             })
 
             socket.on('got_tiles', (color, tiles) => {
