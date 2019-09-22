@@ -179,13 +179,15 @@ const letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O']
 export function Board(props) {
     return (
         <Table style={{ height: '100%', tableLayout: 'fixed' }} bordered>
-            {numbers.map((num) => {
-                return (
-                    <tr>
-                        {letters.map((letter) => fillTile(num, letter, props))}
-                    </tr>
-                )
-            })}
+            <tbody>
+                {numbers.map((num) => {
+                    return (
+                        <tr>
+                            {letters.map((letter) => fillTile(num, letter, props))}
+                        </tr>
+                    )
+                })}
+            </tbody>
         </Table>
     )
 }

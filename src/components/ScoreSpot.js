@@ -21,22 +21,22 @@ export function ScoreSpot(props) {
 
     if (typeof red === 'number') {
         ret_list.push(
-            <Input style={{ marginLeft: '0.5em', width: '6em', border: '3px solid red' }} onChange={(e) => { change_my_score(socket, e)}} value={red} disabled={my_color !== 'red'} size="sm" type="number" />
+            <Input style={{ marginLeft: '0.5em', width: '6em', border: '3px solid red' }} onChange={(e) => { change_my_score(socket, e)}} value={red} disabled={my_color !== 'red'} bsSize="sm" type="number" />
         )
     }
     if (typeof green === 'number') {
         ret_list.push(
-            <Input style={{ marginLeft: '0.5em', width: '6em', border: '3px solid green' }} onChange={(e) => { change_my_score(socket, e)}} value={green} disabled={my_color !== 'green'} size="sm" type="number" />
+            <Input style={{ marginLeft: '0.5em', width: '6em', border: '3px solid green' }} onChange={(e) => { change_my_score(socket, e)}} value={green} disabled={my_color !== 'green'} bsSize="sm" type="number" />
         )
     }
     if (typeof blue === 'number') {
         ret_list.push(
-            <Input style={{ marginLeft: '0.5em', width: '6em', border: '3px solid blue' }} onChange={(e) => { change_my_score(socket, e)}} value={blue} disabled={my_color !== 'blue'} size="sm" type="number" />
+            <Input style={{ marginLeft: '0.5em', width: '6em', border: '3px solid blue' }} onChange={(e) => { change_my_score(socket, e)}} value={blue} disabled={my_color !== 'blue'} bsSize="sm" type="number" />
         )
     }
     if (typeof yellow === 'number') {
         ret_list.push(
-            <Input style={{ marginLeft: '0.5em', width: '6em', border: '3px solid yellow' }} onChange={(e) => { change_my_score(socket, e)}} value={yellow} disabled={my_color !== 'yellow'} size="sm" type="number" />
+            <Input style={{ marginLeft: '0.5em', width: '6em', border: '3px solid yellow' }} onChange={(e) => { change_my_score(socket, e)}} value={yellow} disabled={my_color !== 'yellow'} bsSize="sm" type="number" />
         )
     }
 
