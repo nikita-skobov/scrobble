@@ -68,8 +68,15 @@ function draw_n_tiles(n) {
     return my_tiles
 }
 
+app.get('/', (req, res) => {
+    console.log('got root request!')
+    res.send('OK')
+})
+
 io.on('connection', (socket) => {
     console.log('someone connected')
+    console.log(socket.request.connection.remoteAddress)
+    console.log(socket.request.headers)
 
     if (!has_host) {
         // first person to connect is host.
@@ -234,6 +241,9 @@ io.on('connection', (socket) => {
     })
 })
 
-http.listen(PORT, () => {
+http.listen({
+    port: PORT,
+    host: '0.0.0.0',
+}, () => {
     console.log(`listening on ${PORT}`)
 })
