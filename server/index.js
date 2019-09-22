@@ -84,12 +84,14 @@ io.on('connection', (socket) => {
         has_host = true
     }
 
-    if (positions.length === 0 && !game_running) {
+    if (positions.length === 0 || !game_running) {
+        console.log('disconnecting because game running or no more positions')
         socket.disconnect()
         return null
     }
     if (!game_running) {
         socket.color = positions.shift()
+        console.log(`assigning socket color: ${socket.color}`)
     }
     const my_player = {
         color: socket.color,
@@ -97,6 +99,7 @@ io.on('connection', (socket) => {
         score: 0,
     }
     if (!game_running) {
+        console.log(`notifying all connected clients of: ${socket.color}`)
         players.push(my_player)
         socket.broadcast.emit('newplayer', my_player)
     }
@@ -250,6 +253,7 @@ io.on('connection', (socket) => {
             if (socket.color) {
                 for (let i = 0; i < players.length; i += 1) {
                     if (players[i].color === socket.color && current_turn === socket.color) {
+                        console.log(`${socket.color} is ending turn!`)
                         let turn_index = turn_order.indexOf(socket.color)
                         turn_index += 1
                         if (turn_index >= players.length) {
@@ -270,6 +274,7 @@ io.on('connection', (socket) => {
                         socket.broadcast.emit('got_tiles', socket.color, dummy_tiles)
     
                         current_turn = turn_order[turn_index]
+                        console.log(`next turn is: ${current_turn}`)
                         socket.emit('next_turn', current_turn, tiles_remaining.length)
                         socket.broadcast.emit('next_turn', current_turn, tiles_remaining.length)
                         break
