@@ -98,7 +98,7 @@ function fillTile(num, letter, obj) {
         case 'H15':
         case 'O15':
         case 'O1': {
-            return <Tile {...obj} type="triple_letter" NL={NL} />
+            return <Tile {...obj} type="triple_word" NL={NL} />
         }
 
         case 'C3':
