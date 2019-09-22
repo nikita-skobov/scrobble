@@ -184,55 +184,62 @@ const action_connect_to_game = (url, port, cb) => {
         const socket = sio(`${url}:${port}`)
         socket.once('connect', () => {
             console.log('woohoo connected!!')
+            console.log('asking whoami')
             socket.emit('whoami')
+            console.log('asking whois')
             socket.emit('whois')
             socket.once('game_started', (order, tiles_left) => {
-                console.log('order is: ')
+                console.log('received game_started, order is: ')
                 console.log(order)
                 dispatch(action_game_has_tiles_left(tiles_left))
                 dispatch(action_game_has_order(order))
+                console.log('asking for tiles')
                 socket.emit('get_tiles')
             })
 
             socket.on('tiles_replaced', (new_tiles) => {
+                console.log('received tiles_replaced')
                 dispatch(action_got_tiles(-1, new_tiles))
             })
 
             socket.on('score_changed', (color, new_score) => {
+                console.log(`received score_change for ${color} : ${new_score}`)
                 dispatch(action_score_changed(color, new_score))
             })
 
             socket.on('next_turn', (color, tiles_left) => {
+                console.log(`received next turn: ${color}, tiles left: ${tiles_left}`)
                 dispatch(action_game_has_tiles_left(tiles_left))
                 dispatch(action_next_turn(color))
             })
 
             socket.on('tile_placed', (color, tile, pos) => {
+                console.log(`received tile placed: ${color} ${pos}`)
                 dispatch(action_tile_placed(color,tile,pos))
             })
 
             socket.on('tile_taken', (color, tile, pos) => {
+                console.log(`received tile_taken: ${color} ${pos}`)
                 dispatch(action_tile_taken(color, tile, pos))
             })
 
             socket.on('got_tiles', (color, tiles) => {
-                console.log(`color: ${color} got tiles`)
-                console.log(tiles)
+                console.log(`received got_tiles color: ${color} got tiles`)
                 dispatch(action_got_tiles(color, tiles))
             })
             socket.on('newplayer', (newplayer) => {
-                console.log('SOMEBODYT ELSE JOINE!!!')
+                console.log('received new_player SOMEBODYT ELSE JOINE!!!')
                 dispatch(action_player_joined(false, newplayer))
             })
             socket.once('theyare', (other_players) => {
-                console.log('the other players:')
+                console.log('received theyare.  the other players:')
                 other_players.forEach((player) => {
                     console.log(player)
                     dispatch(action_player_joined(false, player))
                 })
             })
             socket.once('youare', (my_obj) => {
-                console.log('i am:')
+                console.log('received youare, i am:')
                 console.log(my_obj)
                 cb(true)
                 dispatch(action_player_joined(true, my_obj))
