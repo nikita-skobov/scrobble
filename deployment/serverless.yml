@@ -1,0 +1,28 @@
+# merge fixer
+service: scrobble-nikitas-link # NOTE: update this with your service name
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: ${opt:stage, 'production'}
+  region: ${opt:region, 'us-east-1'}
+custom:
+  account: ${opt:account}
+  cloudfront-app:
+    region: us-east-1
+    bucketName: ${opt:bucket}
+    useragentsecret: ${opt:uasecret}
+    acm-region: us-east-1
+    certid: ${opt:certid}
+    logbucket: "${opt:logbucket}.s3.amazonaws.com"
+    logbucket-prefix: "${self:provider.stage}-${self:service}"
+    alias: ${opt:bucket}
+    hostedzonename: ${opt:hzname}
+resources:
+  Resources:
+    # WebRedirectS3Bucket: ${file(cloudfront-app.yml):WebRedirectS3Bucket}
+    # RedirectCloudFrontDistribution: ${file(cloudfront-app.yml):RedirectCloudFrontDistribution}
+    # WWWWebAppRecord: ${file(cloudfront-app.yml):WWWWebAppRecord}
+    WebAppRecord: ${file(cloudfront-app.yml):WebAppRecord}
+    WebAppS3Bucket: ${file(cloudfront-app.yml):WebAppS3Bucket}
+    WebAppS3BucketPolicy: ${file(cloudfront-app.yml):WebAppS3BucketPolicy}
+    WebAppDistribution: ${file(cloudfront-app.yml):WebAppDistribution}
