@@ -114,12 +114,70 @@ io.on('connection', (socket) => {
 
     socket.on('whois', () => {
         const output = []
+        console.log(`${socket.color} asking who  is:`)
         players.forEach((player) => {
+            console.log(player)
             if (socket.color !== player.color) {
-                output.push({ ...player, tiles: player.tiles.map(() => ' ')})
+                output.push({ ...player, tiles: player.tiles ? player.tiles.map(() => ' ') : [' ']})
             }
         })
+        console.log('output: ')
+        console.log(output)
         socket.emit('theyare', output)
+    })
+
+    socket.on('replace_tiles', (tiles) => {
+        if (!tiles.length) {
+            return null
+        }
+        if (game_running) {
+            for (let i = 0; i < players.length; i += 1) {
+                if (players[i].color === socket.color && current_turn === socket.color) {
+                    console.log(`player ${socket.color} wants to replace tiles: ${tiles}`)
+                    if (tiles_remaining.length < tiles.length) {
+                        socket.emit('tiles_replaced', players[i].tiles)
+                        return null
+                    }
+
+                    let player_owns_all_tiles = true
+                    tiles.forEach((tile) => {
+                        if (players[i].tiles.indexOf(tile) === -1) {
+                            player_owns_all_tiles = false
+                        }
+                    })
+                    if (!player_owns_all_tiles) {
+                        socket.emit('tiles_replaced', players[i].tiles)
+                        return null
+                    }
+
+                    let n_tiles = draw_n_tiles(tiles.length)
+                    tiles.forEach((tile) => {
+                        const tile_index = players[i].tiles.indexOf(tile)
+                        players[i].tiles.splice(tile_index, 1)
+                        tiles_remaining.push(tile)
+                    })
+                    n_tiles.forEach((tile) => {
+                        players[i].tiles.push(tile)
+                    })
+                    console.log('successfully replaced with new tiles:')
+                    console.log(players[i].tiles)
+                    socket.emit('tiles_replaced', players[i].tiles)
+
+                    let turn_index = turn_order.indexOf(socket.color)
+                    turn_index += 1
+                    if (turn_index >= players.length) {
+                        turn_index = 0
+                    }
+
+                    console.log(`broadcasting next turn: ${current_turn}`)
+                    current_turn = turn_order[turn_index]
+                    socket.emit('next_turn', current_turn, tiles_remaining.length)
+                    socket.broadcast.emit('next_turn', current_turn, tiles_remaining.length)
+
+                    break
+                }
+            }
+        }
     })
 
     socket.on('change_score', (new_value) => {

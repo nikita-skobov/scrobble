@@ -194,6 +194,10 @@ const action_connect_to_game = (url, port, cb) => {
                 socket.emit('get_tiles')
             })
 
+            socket.on('tiles_replaced', (new_tiles) => {
+                dispatch(action_got_tiles(-1, new_tiles))
+            })
+
             socket.on('score_changed', (color, new_score) => {
                 dispatch(action_score_changed(color, new_score))
             })

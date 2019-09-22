@@ -8,6 +8,8 @@ import {
     Input,
 } from 'reactstrap'
 
+import SwapTileButton from './SwapTileButton'
+
 export class ButtonSpot extends Component {
     constructor(props) {
         super(props)
@@ -25,20 +27,21 @@ export class ButtonSpot extends Component {
 
         if (is_host && !game_running) {
             return (
-                <div>
+                <div style={{ display: 'inherit' }}>
                     <Button onClick={() => {socket.emit('start_game')}}>start game</Button>
                 </div>
             )
         } else if (game_running && my_color == turn_color) {
             return (
-                <div>
+                <div style={{ display: 'inherit' }}>
                     <Button onClick={() => {socket.emit('end_turn')}}>END YOUR TURN</Button>
+                    <SwapTileButton />
                     <Button disabled>Tiles left:{tiles_left}</Button>
                 </div>
             )
         } else if (game_running && turn_color) {
             return (
-                <div>
+                <div style={{ display: 'inherit' }}>
                     <Button disabled>It's {turn_color}'s turn!</Button>
                     <Button disabled>Tiles left:{tiles_left}</Button>
                 </div>

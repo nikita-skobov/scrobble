@@ -159,6 +159,13 @@ export function players_reducer(state = players_initial_state, action) {
             } = action.payload
             
             const ret_obj = { ...state }
+
+            if (color === -1) {
+                // this indicates the player swapped tiles
+                ret_obj.me.tiles = tiles
+                return ret_obj
+            }
+
             if (color === ret_obj.me.color) {
                 ret_obj.me.tiles = tiles
             } else if (color === ret_obj.left.color) {
