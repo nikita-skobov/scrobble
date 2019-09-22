@@ -141,6 +141,10 @@ function fillTile(num, letter, obj) {
         case 'O12':
         case 'H12':
         case 'G13':
+        case 'G7':
+        case 'I7':
+        case 'G9':
+        case 'I9':
         case 'I13': {
             return <Tile {...obj} type="double_letter" NL={NL} />
         }
