@@ -7,8 +7,8 @@ import {
 } from 'reactstrap'
 
 export const action_enter_tile_place_mode = (tile) => {
-    console.log(tile)
-    console.log(tile.target)
+    // console.log(tile)
+    // console.log(tile.target)
     return {
         type: 'TILE_SELECTED',
         payload: {
@@ -45,8 +45,8 @@ export function PlayerSpot(props) {
         enter_tile_place_mode,
     } = props
 
-    console.log('rendering player spot: ')
-    console.log(player_obj)
+    // console.log('rendering player spot: ')
+    // console.log(player_obj)
 
     if (!player_obj) return null
     // player hasnt connected yet, so we dont have data.
@@ -68,8 +68,8 @@ export function PlayerSpot(props) {
 
 const map_state_to_props = (state, own_props) => {
     const pos = own_props.player_pos
-    console.log('got new player tiles')
-    console.log(pos)
+    // console.log('got new player tiles')
+    // console.log(pos)
 
     const {
         turn,
@@ -85,7 +85,7 @@ const map_state_to_props = (state, own_props) => {
     } else if (pos === 'right') {
         player_obj = state.players.right
     }
-    console.log(player_obj)
+    // console.log(player_obj)
 
     // if (typeof player_obj === 'object') {
     //     player_obj.tiles = ['a']

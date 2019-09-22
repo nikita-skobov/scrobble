@@ -68,10 +68,6 @@ const Tile = (props) => {
     if (placing_tile) {
         click_class = 'tile_turn_clickable'
         click = () => {
-            console.log('clicked!')
-            console.log(props)
-            console.log(NL)
-            console.log(socket)
             socket.emit('place_tile', placing_tile, NL)
         }
     }

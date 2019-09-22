@@ -5,7 +5,7 @@ import ConnectMod from './ConnectModal'
 import ConnectBoard from './BoardGame'
 
 export function App(props) {
-    console.log(props)
+    // console.log(props)
     const {
         is_connected
     } = props

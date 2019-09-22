@@ -54,7 +54,7 @@ export class SwapTileButton extends Component {
     }
 
     select_tile(e) {
-        console.log(e.target.innerHTML)
+        // // console.log(e.target.innerHTML)
         const { innerHTML } = e.target
         this.setState(() => ({
             tile_selected: innerHTML
@@ -75,8 +75,8 @@ export class SwapTileButton extends Component {
             tile_selected
         } = this.state
 
-        console.log('rendering player spot: ')
-        console.log(player_obj)
+        // console.log('rendering player spot: ')
+        // console.log(player_obj)
 
         if (!player_obj || !can_swap) {
             // player hasnt connected yet, so we dont have data.
