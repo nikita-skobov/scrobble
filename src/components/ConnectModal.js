@@ -169,6 +169,16 @@ const action_game_has_tiles_left = (tiles) => {
     }
 }
 
+const action_score_changed = (color, score) => {
+    return {
+        type: 'SCORE_CHANGED',
+        payload: {
+            color,
+            score,
+        }
+    }
+}
+
 const action_connect_to_game = (url, port, cb) => {
     return (dispatch) => {
         const socket = sio(`${url}:${port}`)
@@ -182,6 +192,10 @@ const action_connect_to_game = (url, port, cb) => {
                 dispatch(action_game_has_tiles_left(tiles_left))
                 dispatch(action_game_has_order(order))
                 socket.emit('get_tiles')
+            })
+
+            socket.on('score_changed', (color, new_score) => {
+                dispatch(action_score_changed(color, new_score))
             })
 
             socket.on('next_turn', (color, tiles_left) => {

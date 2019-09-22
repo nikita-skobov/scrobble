@@ -40,16 +40,16 @@ const positions = [
 const players = []
 
 let tiles_remaining = [
-'A','A','A','A','A','A','A','A','A','B',
-'B','C','C','D','D','D','D','E','E','E',
-'E','E','E','E','E','E','E','E','E','F',
-'F','G','G','G','H','H','I','I','I','I',
-'I','I','I','I','I','J','K','L','L','L',
-'L','M','M','N','N','N','N','N','N','O',
-'O','O','O','O','O','O','O','P','P','Q',
-'R','R','R','R','R','R','S','S','S','S',
-'T','T','T','T','T','T','U','U','U','U',
-'V','V','W','W','X','Y','Y','Z','?','?',
+'A_1','A_1','A_1','A_1','A_1','A_1','A_1','A_1','A_1','B_3',
+'B_3','C_3','C_3','D_2','D_2','D_2','D_2','E_1','E_1','E_1',
+'E_1','E_1','E_1','E_1','E_1','E_1','E_1','E_1','E_1','F_4',
+'F_4','G_2','G_2','G_2','H_4','H_4','I_1','I_1','I_1','I_1',
+'I_1','I_1','I_1','I_1','I_1','J_8','K_5','L_1','L_1','L_1',
+'L_1','M_3','M_3','N_1','N_1','N_1','N_1','N_1','N_1','O_1',
+'O_1','O_1','O_1','O_1','O_1','O_1','O_1','P_3','P_3','Q_10',
+'R_1','R_1','R_1','R_1','R_1','R_1','S_1','S_1','S_1','S_1',
+'T_1','T_1','T_1','T_1','T_1','T_1','U_1','U_1','U_1','U_1',
+'V_4','V_4','W_4','W_4','X_8','Y_4','Y_4','Z_10','?_0','?_0',
 ]
 const board = {}
 const player_placed = {}
@@ -92,6 +92,7 @@ io.on('connection', (socket) => {
     const my_player = {
         color: socket.color,
         join_order: 3 - positions.length,
+        score: 0,
     }
     players.push(my_player)
     socket.broadcast.emit('newplayer', my_player)
@@ -101,6 +102,7 @@ io.on('connection', (socket) => {
             is_host: socket.is_host ? true : false,
             join_order: my_player.join_order,
             color: socket.color,
+            score: my_player.score,
         }
         socket.emit('youare', youare)
     })
@@ -114,6 +116,18 @@ io.on('connection', (socket) => {
                 }
             })
             socket.emit('theyare', output)
+        }
+    })
+
+    socket.on('change_score', (new_value) => {
+        for (let i = 0; i < players.length; i += 1) {
+            if (players[i].color === socket.color) {
+                console.log(`player ${socket.color} changing score to: ${new_value}`)
+
+                players[i].score = new_value
+                socket.broadcast.emit('score_changed', socket.color, new_value)
+                break
+            }
         }
     })
 

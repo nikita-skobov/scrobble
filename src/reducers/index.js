@@ -55,6 +55,27 @@ export function connection_reducer(state = connection_initial_state, action) {
 
 export function players_reducer(state = players_initial_state, action) {
     switch (action.type) {
+        case 'SCORE_CHANGED': {
+            const {
+                color,
+                score,
+                is_mine,
+            } = action.payload
+
+            const ret_obj = { ...state }
+
+            if (is_mine) {
+                ret_obj.me.score = score
+            } else if (color === ret_obj.left.color) {
+                ret_obj.left.score = score
+            } else if (color === ret_obj.top.color) {
+                ret_obj.top.score = score
+            } else if (color === ret_obj.right.color) {
+                ret_obj.right.score = score
+            }
+
+            return ret_obj
+        }
         case 'PLAYER_JOIN': {
             const {
                 is_me,

@@ -5,6 +5,7 @@ import {
     Row,
     Col,
     Button,
+    Input,
 } from 'reactstrap'
 
 export class ButtonSpot extends Component {

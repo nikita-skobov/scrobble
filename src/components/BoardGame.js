@@ -9,6 +9,7 @@ import {
 import PlayerSpot from './PlayerSpot'
 import Board from './Board'
 import ButtonSpot from './ButtonSpot'
+import ScoreSpot from './ScoreSpot'
 
 export class BoardGame extends Component {
     constructor(props) {
@@ -24,7 +25,10 @@ export class BoardGame extends Component {
         } = this.props
 
         return [
-            <Row noGutters style={{ height: '6%' }}><ButtonSpot /></Row>,
+            <Row noGutters style={{ height: '6%' }}>
+                <ButtonSpot />
+                <ScoreSpot />
+            </Row>,
             <Row noGutters style={{ height: '10%', backgroundColor: 'black'}}><PlayerSpot player_pos="top" /></Row>,
             <Row noGutters style={{ height: '74%' }}>
                 <div style={{ width: '10%', backgroundColor: 'black'}}><PlayerSpot player_pos="left" vertical /></div>
