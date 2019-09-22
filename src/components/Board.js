@@ -41,6 +41,7 @@ const Tile = (props) => {
     const {
         placing_tile,
         placed_tiles,
+        my_tiles_this_turn,
         NL,
         socket,
         type,
@@ -58,7 +59,7 @@ const Tile = (props) => {
 
     let click = () => {}
     let click_class = ''
-    if (is_turn && !placing_tile && placed_tiles && placed_tiles[NL]) {
+    if (is_turn && !placing_tile && my_tiles_this_turn && my_tiles_this_turn[NL]) {
         click_class = 'tile_turn_clickable'
         click = () => {
             socket.emit('take_tile', NL)
@@ -192,7 +193,8 @@ export function Board(props) {
 const map_state_to_props = (state, own_props) => {
     const {
         placing_tile,
-        placed_tiles
+        placed_tiles,
+        my_tiles_this_turn,
     } = state.board
     const {
         turn,
@@ -206,6 +208,8 @@ const map_state_to_props = (state, own_props) => {
         placing_tile,
         number_of_placed_tiles: Object.keys(placed_tiles).length,
         placed_tiles,
+        my_tiles_this_turn,
+        number_my_tiles_placed: Object.keys(my_tiles_this_turn).length,
         socket,
         ...own_props
     }

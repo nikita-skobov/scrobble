@@ -10,6 +10,8 @@ const connection_initial_state = {
 const board_initial_state = {
     placing_tile: '',
     placed_tiles: {},
+    my_tiles_this_turn: {},
+    my_color: '',
     tiles_left: 100,
 }
 
@@ -178,6 +180,20 @@ export function players_reducer(state = players_initial_state, action) {
 
 export function board_reducer(state = board_initial_state, action) {
     switch (action.type) {
+        case 'PLAYER_JOIN': {
+            const {
+                is_me,
+                player_obj,
+            } = action.payload
+
+            const ret_obj = { ...state }
+
+            if (is_me) {
+                ret_obj.my_color = player_obj.color
+            }
+
+            return ret_obj
+        }
         case 'TILE_SELECTED': {
             console.log('tile selected')
             console.log('now state is:')
@@ -206,6 +222,9 @@ export function board_reducer(state = board_initial_state, action) {
                 pos
             } = action.payload
             ret_obj.placed_tiles[pos] = { color, tile }
+            if (color === ret_obj.my_color) {
+                ret_obj.my_tiles_this_turn[pos] = tile
+            }
             console.log(ret_obj)
             return ret_obj
         }
@@ -216,6 +235,11 @@ export function board_reducer(state = board_initial_state, action) {
 
             const ret_obj = { ...state }
             ret_obj.tiles_left = tiles_left
+            return ret_obj
+        }
+        case 'NEXT_TURN': {
+            const ret_obj = { ...state }
+            ret_obj.my_tiles_this_turn = {}
             return ret_obj
         }
         default:
