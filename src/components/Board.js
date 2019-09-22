@@ -23,7 +23,7 @@ const PlacedTile = (props) => (
 const style_obj = {
     empty: { textAlign: 'center', backgroundColor: '#54664f' },
     triple_word: { textAlign: 'center', color: 'white', backgroundColor: '#590800' },
-    triple_letter: { textAlign: 'center', color: 'white', backgroundColor: '#96e2e8'},
+    triple_letter: { textAlign: 'center', color: 'white', backgroundColor: '#09656c'},
     double_word: { textAlign: 'center', color: 'white', backgroundColor: '#a768c1' },
     double_letter: { textAlign: 'center', color: 'white', backgroundColor: '#424242'},
     center: { textAlign: 'center', color: 'white', backgroundColor: '#d3a304'},
