@@ -24,20 +24,20 @@ export class ButtonSpot extends Component {
 
         if (is_host && !game_running) {
             return (
-                <div style={{ position: 'absolute',  top: 0, left: 0 }}>
+                <div>
                     <Button onClick={() => {socket.emit('start_game')}}>start game</Button>
                 </div>
             )
         } else if (game_running && my_color == turn_color) {
             return (
-                <div style={{ position: 'absolute',  top: 0, left: 0 }}>
+                <div>
                     <Button onClick={() => {socket.emit('end_turn')}}>END YOUR TURN</Button>
                     <Button disabled>Tiles left:{tiles_left}</Button>
                 </div>
             )
         } else if (game_running && turn_color) {
             return (
-                <div style={{ position: 'absolute',  top: 0, left: 0 }}>
+                <div>
                     <Button disabled>It's {turn_color}'s turn!</Button>
                     <Button disabled>Tiles left:{tiles_left}</Button>
                 </div>

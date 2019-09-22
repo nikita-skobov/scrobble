@@ -24,9 +24,9 @@ export class BoardGame extends Component {
         } = this.props
 
         return [
-            <ButtonSpot />,
+            <Row noGutters style={{ height: '6%' }}><ButtonSpot /></Row>,
             <Row noGutters style={{ height: '10%', backgroundColor: 'black'}}><PlayerSpot player_pos="top" /></Row>,
-            <Row noGutters style={{ height: '80%' }}>
+            <Row noGutters style={{ height: '74%' }}>
                 <div style={{ width: '10%', backgroundColor: 'black'}}><PlayerSpot player_pos="left" vertical /></div>
                 <div style={{ width: '80%', height: '100%', backgroundColor: 'white'}}><Board /></div>
                 <div style={{ width: '10%', backgroundColor: 'black'}}><PlayerSpot player_pos="right" vertical /></div>
