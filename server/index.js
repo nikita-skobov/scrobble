@@ -84,14 +84,16 @@ io.on('connection', (socket) => {
         has_host = true
     }
 
-    if (positions.length === 0 || !game_running) {
-        console.log('disconnecting because game running or no more positions')
+    if (positions.length === 0 && !game_running) {
+        console.log('disconnecting because no more positions')
         socket.disconnect()
         return null
     }
     if (!game_running) {
         socket.color = positions.shift()
         console.log(`assigning socket color: ${socket.color}`)
+    } else {
+        console.log('NOT ASSIGNING COLOR BECAUSE GAME RUNNING!')
     }
     const my_player = {
         color: socket.color,
