@@ -150,7 +150,7 @@ WebAppDistribution:
           QueryString: 'false'
           Cookies:
             Forward: none
-        ViewerProtocolPolicy: redirect-to-https
+        ViewerProtocolPolicy: allow-all
       ViewerCertificate:
         AcmCertificateArn: "arn:aws:acm:${self:custom.cloudfront-app.acm-region}:${self:custom.account}:certificate/${self:custom.cloudfront-app.certid}"
         SslSupportMethod: sni-only
