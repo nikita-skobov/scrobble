@@ -22,4 +22,4 @@ jobs:
         npm install
         npm run build
       env:
-        CI: true
+        CI: false
