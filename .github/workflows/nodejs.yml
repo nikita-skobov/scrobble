@@ -23,4 +23,15 @@ jobs:
         npm run build
         ./deployment/gzip_all.sh
       env:
+        MY_BUCKET: ${{ secrets.S3_BUCKET }}
         CI: false
+    - name: aws setup
+      uses: actions/aws/cli@latest
+      env:
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_ACCESS_KEY_ID: ${{ secrets. AWS_ACCESS_KEY_ID }}
+    - name: aws deploy
+      run: |
+        aws s3 rm s3://$MY_BUCKET --recursive
+        ./deployment/deploy_all.sh --bucket=$MY_BUCKET --ttl=public,max-age=40
+      
