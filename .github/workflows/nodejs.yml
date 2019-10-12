@@ -31,9 +31,11 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ secrets. AWS_ACCESS_KEY_ID }}
     - name: aws deploy
       run: |
-        echo "$MY_BUCKET"
+        env | grep AWS
+        env | grep BUCKET
         aws s3 rm s3://$MY_BUCKET --recursive
         ./deployment/deploy_all.sh --bucket=$MY_BUCKET --ttl=public,max-age=40
       env:
         MY_BUCKET: ${{ secrets.S3_BUCKET }}
-      
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_ACCESS_KEY_ID: ${{ secrets. AWS_ACCESS_KEY_ID }}      
