@@ -21,6 +21,7 @@ jobs:
       run: |
         npm install
         npm run build
+        ls
         ../../deployment/gzip_all.sh
       env:
         CI: false
