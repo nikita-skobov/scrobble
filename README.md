@@ -2,6 +2,8 @@
 
 > A web browser implementation of a popular board game
 
+![preview](.github/board.png?raw=true "Board Preview")
+
 ## Why?
 
 My friends and I like to play scrabble occasionally. When we play, we use [Tabletop Simulator](https://store.steampowered.com/app/286160/Tabletop_Simulator/), but some friends do not own Tabletop Simulator, and don't want to purchase it. So I created this project so that I can play **scrobble** with my friends without them needing to pay for a seperate game.
@@ -17,7 +19,11 @@ This project is structured into 2 parts:
 
 The client is written using React, React Redux (for state management), Reactstrap/Bootstrap (for basic styling), and socketio (for fast, bidirectional communication).
 
-The client works by first presenting a landing page where you can input a server address and port that you wish to connect to. Once you established a connection with the server, you are presented with the **scrobble** board. If you are the first person to connect, you are granted the host role, which means you decide when the game starts. Once all the other players have joined, you simply press the button at the top left to start the game, and the game proceeds like a normal **scrobble** game.
+The client works by first presenting a landing page where you can input a server address and port that you wish to connect to.
+
+![landing](.github/landing.png?raw=true "Landing Page")
+
+Once you established a connection with the server, you are presented with the **scrobble** board. If you are the first person to connect, you are granted the host role, which means you decide when the game starts. Once all the other players have joined, you simply press the button at the top left to start the game, and the game proceeds like a normal **scrobble** game.
 
 ### Server
 
