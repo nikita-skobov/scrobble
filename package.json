@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "react-scripts start",
+    "start": "cross-env PUBLIC_URL='/' react-scripts start",
     "build": "cross-env GENERATE_SOURCEMAP=false PUBLIC_URL='/' react-scripts build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -13,8 +13,8 @@
     "url": "git+https://github.com/nikita-skobov/scrobble.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Nikita Skobov",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/nikita-skobov/scrobble/issues"
   },
@@ -22,11 +22,11 @@
   "dependencies": {
     "bootstrap": "^4.3.1",
     "express": "^4.17.1",
-    "react": "^16.9.0",
-    "react-app-polyfill": "^1.0.3",
-    "react-dom": "^16.9.0",
+    "react": "^16.10.2",
+    "react-app-polyfill": "^1.0.4",
+    "react-dom": "^16.10.2",
     "react-redux": "^7.1.1",
-    "react-scripts": "^3.1.2",
+    "react-scripts": "^3.2.0",
     "reactstrap": "^8.0.1",
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
@@ -46,6 +46,6 @@
     ]
   },
   "devDependencies": {
-    "cross-env": "^6.0.0"
+    "cross-env": "^6.0.3"
   }
 }
