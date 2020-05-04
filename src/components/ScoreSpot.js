@@ -13,6 +13,7 @@ export function ScoreSpot(props) {
         blue,
         yellow,
         my_color,
+        my_turn_score,
         change_my_score,
         socket,
     } = props
@@ -40,6 +41,11 @@ export function ScoreSpot(props) {
         )
     }
 
+    // at the end add a gray unmodifiable input
+    // that shows your score for the current turn
+    ret_list.push(
+        <Input style={{ marginLeft: '0.5em', width: '6em', border: '3px solid gray' }} value={my_turn_score} disabled={true} bsSize="sm" type="number" />
+    )
 
     return ret_list
 }
@@ -66,6 +72,9 @@ const map_state_to_props = (state, own_props) => {
     const {
         socket,
     } = state.connection
+    const {
+        my_turn_score
+    } = state.turn_score
 
     const color_scores = {}
 
@@ -87,6 +96,7 @@ const map_state_to_props = (state, own_props) => {
     return {
         socket,
         my_color,
+        my_turn_score,
         ...color_scores,
         ...own_props,
     }

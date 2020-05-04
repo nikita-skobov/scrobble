@@ -27,6 +27,19 @@ const players_initial_state = {
     right: false,
 }
 
+const turn_score_initial_state = {
+    my_turn_score: 0,
+}
+
+export function turn_score_reducer(state = turn_score_initial_state, action) {
+    switch (action.type) {
+        case 'MY_TURN_SCORE':
+            return { my_turn_score: action.payload }
+        default:
+            return state
+    }
+}
+
 export function connection_reducer(state = connection_initial_state, action) {
     switch (action.type) {
         case 'CONNECT_SUCC': {
@@ -266,4 +279,5 @@ export default combineReducers({
     players: players_reducer,
     board: board_reducer,
     turn: turn_reducer,
+    turn_score: turn_score_reducer,
 })
