@@ -13,12 +13,12 @@ import { createEnhancers, setupStore } from './setupStore'
 
 
 const store = setupStore(
-  createEnhancers([thunk]),
+    createEnhancers([thunk]),
 )
 
 ReactDOM.render(
-  <Provider store={store}>
-      <ReduxApp someProp="dsa" />
-  </Provider>,
-  document.getElementById('root'),
+    <Provider store={store}>
+        <ReduxApp someProp="dsa" />
+    </Provider>,
+    document.getElementById('root'),
 )
