@@ -75,3 +75,11 @@ As usual, I like to set up my webapp projects to be easily deployed and updated.
 ## Code quality
 
 This project was written over the course of about 8 hours, with some minor bug fixes after that. The intention was to quickly create a workable game, rather than write good code. As such the code is not necessarily pretty or well commented (especially the server/index.js file).
+
+## Changelog:
+
+- 5/4/2020
+    - added an automatic score counter feature
+        - (it displays your score for your current turn in a gray box. You then add that to your actual score manually after review)
+    - changed the website title to Scrobble
+ 
