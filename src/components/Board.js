@@ -6,7 +6,6 @@ import {
     Col,
     Table,
 } from 'reactstrap'
-import { connection_reducer } from '../reducers';
 
 const has = Object.prototype.hasOwnProperty
 const numbers = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
@@ -24,10 +23,6 @@ const PlacedTile = (props) => (
 )
 
 const action_change_my_score = (socket, newScore) => {
-    // todo: 
-    // make it actually change the score in the public
-    // score box instead of the private display box
-    // socket.emit('change_score', newScore)
     return {
         type: 'MY_TURN_SCORE',
         payload: newScore
